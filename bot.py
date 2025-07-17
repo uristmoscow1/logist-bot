@@ -45,9 +45,18 @@ def webhook():
 
     if msg == "/start":
         answer = "Привет! Бот работает."
-    elif msg == "/order":
+   elif msg == "/order":
         orders = get_new_orders()
         if not orders:
+            answer = "Нет новых заказов."
+        else:
+            answer = "\n".join([f"№{o.id}: {o.address}" for o in orders])
+    elif msg == "/help":
+        answer = "Доступные команды:\n/start – начало\n/order – список заказов"
+    elif msg == "/ping":
+        answer = "pong"
+    else:
+        answer = f"Принято: {msg}"
             answer = "Нет новых заказов."
         else:
             answer = "\n".join([f"№{o.id}: {o.address}" for o in orders])

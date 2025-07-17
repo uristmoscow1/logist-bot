@@ -8,7 +8,6 @@ ONEC_URL = os.getenv("ONEC_URL")
 
 app = Flask(__name__)
 
-# ---------- 1С-заглушка ----------
 if not ONEC_URL:
     class FakeOrder:
         def __init__(self, id, address):
@@ -32,7 +31,6 @@ else:
 
     def done_order(order_id, photo, comment):
         return True
-# ---------- конец заглушки ----------
 
 
 @app.route("/", methods=["POST"])
@@ -40,12 +38,12 @@ def webhook():
     data = request.get_json()
     if "message" not in data:
         return "ok", 200
-    msg = data["message"].get("text", "")
+    msg = data["message"].get("text", "").strip()
     chat_id = data["message"]["chat"]["id"]
 
     if msg == "/start":
         answer = "Привет! Бот работает."
-   elif msg == "/order":
+    elif msg == "/order":
         orders = get_new_orders()
         if not orders:
             answer = "Нет новых заказов."
@@ -55,11 +53,6 @@ def webhook():
         answer = "Доступные команды:\n/start – начало\n/order – список заказов"
     elif msg == "/ping":
         answer = "pong"
-    else:
-        answer = f"Принято: {msg}"
-            answer = "Нет новых заказов."
-        else:
-            answer = "\n".join([f"№{o.id}: {o.address}" for o in orders])
     else:
         answer = f"Принято: {msg}"
 
